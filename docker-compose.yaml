@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: keycloakdb
+      POSTGRES_USER: testkeycloakuser
+      POSTGRES_PASSWORD: testkeycloakpassword
+    ports:
+      - '5432:5432'
+    restart:
+      always
+
+  keycloak:      
+    image: quay.io/keycloak/keycloak:20.0.3   
+    volumes:
+      # https://www.keycloak.org/server/importExport
+      - ./keycloack/healthcare.json:/opt/keycloak/data/import/healthcare.json
+    environment:
+      # https://www.keycloak.org/server/all-config
+      KC_HOSTNAME: 'localhost:8080'
+      KC_HOSTNAME_STRICT: "false"
+      KC_PROXY: passthrough
+
+      KC_DB: postgres
+      KC_DB_USERNAME: testkeycloakuser
+      KC_DB_PASSWORD: testkeycloakpassword
+      KC_DB_SCHEMA: public
+      KC_DB_URL: 'jdbc:postgresql://postgres/keycloakdb'
+      KC_LOG_LEVEL: info
+
+      # https://www.keycloak.org/server/containers
+      KEYCLOAK_ADMIN: keycloakuser
+      KEYCLOAK_ADMIN_PASSWORD: keycloakpassword
+    command:
+      start-dev --http-relative-path=/ --import-realm
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+    restart:
+      always
+  
+  # profile:      
+  #   build:
+  #     context: ./api/profile
+  #   depends_on:
+  #     - postgres
+  #   restart:
+  #     always
+  
+  # nuxt:      
+  #   build:
+  #     context: ./client
+  #   ports:
+  #     - '3000:3000'
+  #   depends_on:
+  #     - postgres
+  #   restart:
+  #     always
