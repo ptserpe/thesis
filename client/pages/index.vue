@@ -61,7 +61,7 @@ async function postProfile(data: any) {
 }
 
 useHead({
-    titleTemplate: 'About',
+    titleTemplate: 'Healthcare',
     bodyAttrs: {
         class: 'h-full'
     }
@@ -103,13 +103,6 @@ watch(profile, (newProfile) => {
                     </div>
                     <div class="flex flex-wrap flex-row bg-white px-4 py-5 sm:p-6">
                         <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
-                            <label for="last-name" class="block text-sm font-medium text-gray-700">AMKA</label>
-                            <input type="text" name="amka" id="amka"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                v-model="amka" />
-                        </div>
-
-                        <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
                             <label for="first-name" class="block text-sm font-medium text-gray-700">First name</label>
                             <input type="text" name="first-name" id="first-name" autocomplete="given-name"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -124,11 +117,32 @@ watch(profile, (newProfile) => {
                         </div>
 
                         <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
+                            <label for="last-name" class="block text-sm font-medium text-gray-700">AMKA</label>
+                            <input type="text" name="amka" id="amka"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="amka" />
+                        </div>
+
+                        <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
+                            <label for="last-name" class="block text-sm font-medium text-gray-700">Nationality</label>
+                            <input type="text" name="nationality" id="nationality"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="nationality" />
+                        </div>
+
+                        <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
                             <label for="email-address" class="block text-sm font-medium text-gray-700">Email
                                 address</label>
                             <input type="text" name="email-address" id="email-address" autocomplete="email"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 v-model="email" />
+                        </div>
+
+                        <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
+                            <label for="email-address" class="block text-sm font-medium text-gray-700">Phone</label>
+                            <input type="text" name="phone" id="phone" autocomplete="phone"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="phone" />
                         </div>
 
                         <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
