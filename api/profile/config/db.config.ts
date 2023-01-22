@@ -6,6 +6,7 @@ const dialect: any = "postgres";
 export const connection = new Sequelize({
     host: process.env.HOST,
     dialect: dialect,
+    port: Number.parseInt(process.env.DB_PORT),
     database: process.env.DB,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
