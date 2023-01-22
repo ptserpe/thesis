@@ -24,18 +24,26 @@ class App {
 
     private routes(): void {
 
-        this.express.post('/api/profile', async (req, res) => {
-            var profile = await UserProfile.create({ ...req.body });
-            return res
-                .status(200)
-                .json({});
+        this.express.post('/api/profile/:id', async (req, res) => {
+            try {
+                await UserProfile.upsert({ ...req.body });
+                return res
+                    .status(200)
+                    .json({});
+            } catch (e) {
+                return res.status(500).json({})
+            }
         });
 
         this.express.get('/api/profile/:id', async (req, res) => {
-            var profile = await UserProfile.findByPk(req.params.id);
-            return res
-                .status(200)
-                .json({...profile.dataValues});
+            try {
+                var profile = await UserProfile.findByPk(req.params.id);
+                return res
+                    .status(200)
+                    .json({ ...profile.dataValues });
+            } catch (e) {
+                return res.status(500).json({})
+            }
         });
 
         // handle undefined routes

@@ -1,110 +1,177 @@
+<script setup lang="ts">
+import { time } from 'console';
+
+
+interface UserProfile {
+    email: string;
+    lastName: string;
+    firstName: string;
+    amka: string
+    age: number;
+    phone: string;
+    nationality: string;
+    gender: boolean;
+    weight: number;
+    height: number;
+    id: string;
+}
+
+const firstName = ref();
+const lastName = ref();
+const amka = ref();
+const gender = ref();
+const email = ref();
+const age = ref();
+const height = ref();
+const weight = ref();
+const phone = ref();
+const nationality = ref();
+const refreshing = ref();
+
+const sleep = (ms: any) => new Promise(r => setTimeout(r, ms));
+
+
+
+async function postProfile(data: any) {
+    console.log(data)
+
+    refreshing.value = true
+
+    try {
+        var res = await $fetch('/api/profile', {
+            method: 'POST',
+            body: {
+                firstName: firstName.value,
+                email: email.value,
+                lastName: lastName.value,
+                age: age.value,
+                amka: amka.value,
+                gender: gender.value,
+                height: height.value,
+                weight: weight.value,
+                phone: phone.value,
+                nationality: nationality.value
+            }
+        });
+    } catch (e) {
+
+    } finally {
+        refreshing.value = false
+    }
+}
+
+useHead({
+    titleTemplate: 'About',
+    bodyAttrs: {
+        class: 'h-full'
+    }
+})
+
+const { pending, data: profile } = await useFetch<UserProfile>('/api/profile', {
+    method: 'GET',
+    server: false
+})
+watch(profile, (newProfile) => {
+    if (!newProfile) {
+        return
+    }
+
+    amka.value = newProfile.amka
+    firstName.value = newProfile.firstName
+    lastName.value = newProfile.lastName
+    email.value = newProfile.email
+    gender.value = newProfile.gender
+    age.value = newProfile.age
+    height.value = newProfile.height
+    weight.value = newProfile.weight
+    phone.value = newProfile.phone
+    nationality.value = newProfile.nationality
+})
+
+
+</script>
+
+
 <template>
-    <div class="overflow-hidden bg-white shadow sm:rounded-lg">
-        <div class="px-4 py-5 sm:px-6">
-            <h3 class="text-lg font-medium leading-6 text-gray-900">Patient Information</h3>
-            <p class="mt-1 max-w-2xl text-sm text-gray-500">Personal details</p>
-        </div>
-        <div class="border-t border-gray-200">
-            <dl>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">AMKA</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.amka }}</dd>
+    <div class="bg-gray-800 h-full">
+        <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div class="w-full bg-white sm:rounded-md">
+                <Spinner class="place-content-center p-10" v-if="pending"  />
+                <div class="overflow-hidden" v-if="!(pending)">
+                    <div class="flex flex-wrap flex-row px-4 py-5 sm:p-6">
+                        <h1 class="font-bold">Personal Details</h1>
+                    </div>
+                    <div class="flex flex-wrap flex-row bg-white px-4 py-5 sm:p-6">
+                        <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
+                            <label for="last-name" class="block text-sm font-medium text-gray-700">AMKA</label>
+                            <input type="text" name="amka" id="amka"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="amka" />
+                        </div>
+
+                        <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
+                            <label for="first-name" class="block text-sm font-medium text-gray-700">First name</label>
+                            <input type="text" name="first-name" id="first-name" autocomplete="given-name"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="firstName" />
+                        </div>
+
+                        <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
+                            <label for="last-name" class="block text-sm font-medium text-gray-700">Last name</label>
+                            <input type="text" name="last-name" id="last-name" autocomplete="family-name"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="lastName" />
+                        </div>
+
+                        <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
+                            <label for="email-address" class="block text-sm font-medium text-gray-700">Email
+                                address</label>
+                            <input type="text" name="email-address" id="email-address" autocomplete="email"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="email" />
+                        </div>
+
+                        <div class="basis-full md:basis-1/2 md:px-3 md:mb-5">
+                            <label for="last-name" class="block text-sm font-medium text-gray-700">Gender</label>
+                            <select id="country" name="country" autocomplete="country-name"
+                                class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                v-model="gender">
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap flex-row bg-white px-4 py-5 sm:p-6">
+                        <div class="basis-full md:basis-1/3 md:px-3 md:mb-5">
+                            <label for="last-name" class="block text-sm font-medium text-gray-700">Height</label>
+                            <input type="text" name="height" id="height" autocomplete="height"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="height" />
+                        </div>
+                        <div class="basis-full md:basis-1/3 md:px-3 md:mb-5">
+                            <label for="last-name" class="block text-sm font-medium text-gray-700">Weight</label>
+                            <input type="text" name="weight" id="weight" autocomplete="weight"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="weight" />
+                        </div>
+                        <div class="basis-full md:basis-1/3 md:px-3 md:mb-5">
+                            <label for="last-name" class="block text-sm font-medium text-gray-700">Age</label>
+                            <input type="text" name="age" id="age" autocomplete="age"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                v-model="age" />
+                        </div>
+                    </div>
+                    <div class="bg-gray-200 px-4 py-3 text-right sm:px-6 rounded-b-md">
+                        <div class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" >
+                            <Spinner v-if="refreshing"/>
+                        <button class="h-full w-full py-2 px-4 " @click="postProfile" v-if="!refreshing">Save</button>
+                        </div>
+                        
+                    </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">First Name</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.firstName }}</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Last Name</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.lastName }}</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Email address</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.email }}</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Phone number</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.phone }}</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Age</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.age }}</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Sex</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.sex }}</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Nationality</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.nationality }}</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Weight</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.weight }}</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Height</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ profile?.height }}</dd>
-                </div>
-                <!-- <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">About</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">Fugiat ipsum ipsum deserunt culpa aute
-                        sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat
-                        sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit
-                        ad adipisicing reprehenderit deserunt qui eu.</dd>
-                </div>
-                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Attachments</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                        <ul role="list" class="divide-y divide-gray-200 rounded-md border border-gray-200">
-                            <li class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
-                                <div class="flex w-0 flex-1 items-center">
-                                    <PaperClipIcon class="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                                    <span class="ml-2 w-0 flex-1 truncate">resume_back_end_developer.pdf</span>
-                                </div>
-                                <div class="ml-4 flex-shrink-0">
-                                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Download</a>
-                                </div>
-                            </li>
-                            <li class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
-                                <div class="flex w-0 flex-1 items-center">
-                                    <PaperClipIcon class="h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
-                                    <span class="ml-2 w-0 flex-1 truncate">coverletter_back_end_developer.pdf</span>
-                                </div>
-                                <div class="ml-4 flex-shrink-0">
-                                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Download</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </dd>
-                </div> -->
-            </dl>
+
+            </div>
         </div>
     </div>
 </template>
-
-<script setup lang="ts">
-// import { PaperClipIcon } from '@heroicons/vue/20/solid'
-
-interface UserProfile{
-    email:String;
-    lastName:String;
-    firstName:String;
-    amka:String
-    age:Number;
-    phone: String;
-    nationality: String;
-    sex: Boolean;
-    weight: Number;
-    height: Number;
-    id:String;
-}
-
-const headers = useRequestHeaders(['cookie']) as HeadersInit
-const {data: token} = await useFetch('/api/token', { headers })
-console.log(token.value)
-const {data: profile} = await useFetch<UserProfile>(process.env.PROFILE +token.value?.user.id, {immediate: true, watch: [token]})
-
-console.log(process.env.PROFILE +token.value?.user.id)
-
-</script>

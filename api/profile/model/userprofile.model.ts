@@ -56,10 +56,10 @@ export class UserProfile extends Model {
   nationality: string;
 
   @Column({
-    type: DataType.BOOLEAN,
+    type: DataType.STRING,
     allowNull: true,
   })
-  sex: boolean;
+  gender: string;
 
   @Column({
     type: DataType.DOUBLE,
