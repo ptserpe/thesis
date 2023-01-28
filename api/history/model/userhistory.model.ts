@@ -31,12 +31,6 @@ export class UserHistory extends Model {
     allowNull: true,
   })
   importance: string
-  
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-  })
-  date: Date;
 
   @Column({
     type: DataType.STRING,
