@@ -12,6 +12,7 @@ connection
   })
   .catch((err) => {
     console.log("Error", err);
+    process.exit(1)
   });
 
 App.set("port", port);
