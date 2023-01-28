@@ -3,7 +3,7 @@
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="w-full bg-white sm:rounded-md">
                 <div class="flex flex-wrap flex-row px-4 py-5 sm:p-6">
-                    <h1 class="font-bold">Personal Details</h1>
+                    <h1 class="font-bold">Health Exams</h1>
                 </div>
                 <div class="bg-white py-4 md:py-7 px-4 md:px-8 xl:px-10 rounded-b-md">
                     <!-- <div class="sm:flex items-center justify-between">
@@ -36,21 +36,9 @@
                     </div> -->
                     <div class="overflow-x-auto">
                         <table class="w-full whitespace-nowrap">
-                            <tbody>
-                                <Exam exam="exam" important="urgent" datetime="dateeee" place="skatoules" filename="edw" />
+                            <tbody v-for="item in examItems">
+                                <Exam :exam="item.exam" :filename="item.fileName" :place="item.place" :important="item.importance" :datetime="item.creationDate"/>
                                 <tr class="h-3"></tr>
-                               
-                                <Exam/>
-                                <tr class="h-3"></tr>
-                                
-                                <Exam/>
-                                <tr class="h-3"></tr>
-                                
-                                <Exam/>
-                                <tr class="h-3"></tr>
-                                
-                                <Exam/>
-                                
                             </tbody>
                         </table>
                     </div>
@@ -60,22 +48,29 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "component",
-    data() {
-        return {
-            show: null
-        };
-    },
-    methods: {
-    },
-    mounted() { },
-};
-</script>
+<script setup lang="ts">
 
-<style>
-.checkbox:checked+.check-icon {
-    display: flex;
+interface UserExam {
+    id: string;
+    exam: string;
+    importance?: string;
+    place?: string;
+    fileName?: string;
+    filePath?: string;
+    creationDate: string
 }
-</style>    
+
+useHead({
+    titleTemplate: 'Healthcare',
+    bodyAttrs: {
+        class: 'h-full'
+    }
+})
+
+const { pending, data: examItems } = await useFetch <UserExam[]> ('/api/history', {
+    method: 'GET',
+    server: false
+})
+
+
+</script>
