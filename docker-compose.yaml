@@ -42,9 +42,21 @@ services:
     restart:
       always
   
-  # profile:      
+  profile:      
+    build:
+      context: ./api/profile
+    ports:
+      - '3081:3081'
+    depends_on:
+      - postgres
+    restart:
+      always
+  
+  # history:      
   #   build:
-  #     context: ./api/profile
+  #     context: ./api/history
+  #   ports:
+  #     - '3082:3082'
   #   depends_on:
   #     - postgres
   #   restart:

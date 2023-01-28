@@ -38,6 +38,11 @@ class App {
         this.express.get('/api/profile/:id', async (req, res) => {
             try {
                 var profile = await UserProfile.findByPk(req.params.id);
+                
+                if (profile == null) {
+                    return res.status(404).json({})
+                }
+
                 return res
                     .status(200)
                     .json({ ...profile.dataValues });
