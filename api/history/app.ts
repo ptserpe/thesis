@@ -29,12 +29,25 @@ class App {
 
         this.express.post('/api/history/', async (req, res) => {
             try {
-                let payload = {
-                    ...req.body, 
-                    date: Date.now(),
+
+                let examId = req.query['id']
+                console.log(req.query);
+                
+                let payload;
+
+                if (String(examId) == "") {
+                    payload = {
+                        ...req.body,
+                    }
+                } else {
+                    payload = {
+                        ...req.body,
+                        id: examId,
+                    }
                 }
+
                 console.log(payload)
-                await UserHistory.create({ ...payload });
+                await UserHistory.upsert({ ...payload });
                 return res
                     .status(200)
                     .json({});
@@ -61,7 +74,7 @@ class App {
                 console.log(req.query);
                 
                 if (String(test) == "") {
-                    return res.status(200).json({})
+                    return res.status(400).json({})
                 }
 
                 const historyExams = await UserHistory.findAll(
