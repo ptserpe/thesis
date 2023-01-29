@@ -2,9 +2,11 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, UserIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
+const route = useRoute()
+
 const navigation = [
-    { name: 'History', href: '/history', current: false },
-    { name: 'Profile', href: '/', current: true },
+    { name: 'History', href: '/history', current: route.path == "/history" },
+    { name: 'Profile', href: '/', current: route.path == "/" },
 ]
 
 
