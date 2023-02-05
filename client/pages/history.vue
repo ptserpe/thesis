@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-tailwind-modal v-model="show" @confirm="confirm" @cancel="cancel">
+        <v-tailwind-modal v-model="show" @confirm="confirm" @cancel="cancel" >
             <template v-slot:title>New Exam</template>
             <NewExam/>
         </v-tailwind-modal>
@@ -11,11 +11,6 @@
                 <div class="flex flex-wrap flex-row px-4 py-5 sm:p-6">
                     <h1 class="font-bold">Health Exams</h1>
                 </div>
-
-                <!-- <div class="flex flex-wrap flex-row px-4 py-5 sm:p-6">
-                    <input type="file" id="file-chooser" v-on:change="event => upload(event.target?.files[0])" />
-                    <button id="upload-button">Upload to Minio</button>   
-                </div> -->
                 <div class="bg-white py-4 md:py-7 px-4 md:px-8 xl:px-10 rounded-b-md">
                     <div class="sm:flex items-center justify-between">
                         <div class="flex items-center">
@@ -41,7 +36,7 @@
                             </a> -->
                         </div>
                         <button @click="show = true"
-                            class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded">
+                            class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded mb-4">
                             <p class="text-sm font-medium leading-none text-white">New Exam</p>
                         </button>
                     </div>
@@ -93,8 +88,12 @@ const { pending, data: examItems } = await useFetch<UserExam[]>('/api/history', 
 
 const show = ref(true)
 
-const confirm = () => { show.value = false }
-const cancel = () => { show.value = false }
+const confirm = () => { 
+    show.value = false 
+}
+const cancel = () => { 
+    show.value = false 
+}
 
 
 </script>
