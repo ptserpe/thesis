@@ -2,7 +2,8 @@
 export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
-        '@sidebase/nuxt-auth'
+        '@sidebase/nuxt-auth',
+        'formidable'
     ],
     typescript: {
         strict: true
@@ -25,6 +26,8 @@ export default defineNuxtConfig({
     build: {
         transpile: [
             "@heroicons/vue",
+            '@types/minio',
+            'minio'
         ]
     },
     runtimeConfig: {
