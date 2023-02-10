@@ -2,9 +2,26 @@ import { getServerSession } from '#auth'
 import formidable from "formidable";
 import fs from "fs";
 import path from "path";
-import {Client} from 'minio';
+import { Client } from 'minio';
+
+var minioClient = new Client({
+    endPoint: 'localhost',
+    port: 9000,
+    useSSL: false,
+    accessKey: 'minioadmin',
+    secretKey: 'minioadmin'
+});
 
 
+interface UserExam{
+    id:string;
+    exam:string;
+    importance?:string;
+    place?:string;
+    fileName?:string;
+    filePath?:string;
+    creationDate:string
+}
 
 export default defineEventHandler(async (event) => {
 
@@ -28,13 +45,6 @@ export default defineEventHandler(async (event) => {
                 var fileStream = fs.createReadStream(examFile.filepath);
 
                 try {
-                    var minioClient = new Client({
-                        endPoint: 'localhost',
-                        port: 9000,
-                        useSSL: false,
-                        accessKey: 'minioadmin',
-                        secretKey: 'minioadmin'
-                    });
 
                     const bucketExists = await minioClient.bucketExists(session.user.id)
 
@@ -49,21 +59,44 @@ export default defineEventHandler(async (event) => {
                     reject(e)
                     return
                 }
+            } else {
+                if (fields.id != undefined && fields.id != '') {
+                    try {
+                        let existingExam = await $fetch<UserExam>(process.env.HISTORY! + `/${fields.id}`, {
+                            method: 'GET'
+                        })
+                        
+                        if (existingExam.fileName != undefined && existingExam.fileName != '') {
+                            await minioClient.removeObject(session.user.id, examFile.originalFilename)
+                        }
+
+                    } catch (e) {
+                    }
+                }
             }
 
             const historyExamApiBody = {
                 userId: session.user.id,
                 exam: fields.exam,
                 place: fields.place,
+                date: fields.date,
                 importance: fields.importance,
                 fileName: filePath,
                 filePath: filePath,
             }
 
+            let queries = {}
+            if (fields.id != undefined && fields.id != '') {
+                queries = {
+                    id: fields.id
+                }
+            }
+
             try {
                 await $fetch(process.env.HISTORY!, {
                     method: 'POST',
-                    body: historyExamApiBody
+                    body: historyExamApiBody,
+                    query:  queries
                 })
                 resolve({ status: 'success' })
             } catch (e) {

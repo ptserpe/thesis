@@ -88,7 +88,7 @@ const props = defineProps(['modalExam'])
 
 const fileInputKey = ref(0)
 
-
+const examId = ref(undefined)
 const examName = ref('')
 const examDate = ref('')
 const examImportance = ref('')
@@ -118,6 +118,12 @@ watch(modalExam, (value) => {
         examDate.value = new Date(value.date).toLocaleString("el-GR", { year: 'numeric', month: 'numeric', day: 'numeric' })
     }
 
+    if (value.id != undefined) {
+        examId.value = value.id
+    } else {
+        examId.value = undefined
+    }
+
     examName.value = value.name
     examImportance.value = value.importance
     examPlace.value = value.place
@@ -142,7 +148,11 @@ const confirm = async () => {
     formData.append('file', file.value.fileHandle)
     formData.append('exam', examName.value)
     formData.append('place', examPlace.value)
+    formData.append('date', examDate.value)
     formData.append('importance', examImportance.value)
+    if (examId.value != undefined) {
+        formData.append('id', examId.value)
+    }
 
     await $fetch("/api/history", {
         method: 'POST',
@@ -159,6 +169,7 @@ const cancel = () => {
 }
 
 const reset = () => {
+    examId.value = undefined
     examName.value = ''
     examDate.value = ''
     examImportance.value = ''

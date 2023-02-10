@@ -32,7 +32,7 @@
                                 </div>
                             </a> -->
                         </div>
-                        <button @click="showModalExam(undefined, undefined, undefined, undefined, undefined)"
+                        <button @click="showModalExam(undefined, undefined, undefined, undefined, undefined, undefined)"
                             class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded mb-4">
                             <p class="text-sm font-medium leading-none text-white">New Exam</p>
                         </button>
@@ -58,7 +58,7 @@
                                             <CalendarDaysIcon class="h-5" />
                                             <button
                                                 class="py-3 px-3 text-sm focus:outline-none leading-none text-red-700 rounded">{{
-                                                    new Date(item.creationDate).toLocaleString("el-GR", {
+                                                    new Date(item.date!).toLocaleString("el-GR", {
                                                         year: 'numeric', month:
                                                             'numeric', day: 'numeric'
                                                     })
@@ -79,7 +79,7 @@
                                     </td>
                                     <td class="">
                                         <div>
-                                            <button class="h-full w-full py-2 px-4 " @click="showModalExam(item.place, item.exam, item.importance, item.fileName, item.creationDate)">View</button>
+                                            <button class="h-full w-full py-2 px-4 " @click="showModalExam(item.id, item.place, item.exam, item.importance, item.fileName, item.date)">View</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -107,6 +107,7 @@ interface UserExam {
     exam: string;
     importance?: string;
     place?: string;
+    date?: string;
     fileName?: string;
     filePath?: string;
     creationDate: string
@@ -126,9 +127,10 @@ const { data: examItems, pending, refresh, error } = await useFetch<UserExam[]>(
     server: false
 })
 
-const showModalExam = (examPlace: string | undefined, examName: string | undefined, examImportance: string | undefined, examFileName: string | undefined, examDate: string | undefined) => {
+const showModalExam = (examId: string | undefined, examPlace: string | undefined, examName: string | undefined, examImportance: string | undefined, examFileName: string | undefined, examDate: string | undefined) => {
 
     modalExam.value = {
+        id: examId,
         place: examPlace,
         name: examName,
         date: examDate,

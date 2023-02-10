@@ -25,6 +25,12 @@ export class UserHistory extends Model {
     allowNull: false,
   })
   exam: string
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+  })
+  date: Date;
   
   @Column({
     type: DataType.STRING,
