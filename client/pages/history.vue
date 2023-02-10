@@ -37,14 +37,54 @@
                             <p class="text-sm font-medium leading-none text-white">New Exam</p>
                         </button>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full whitespace-nowrap">
+                    <div class="overflow-x-auto" v-if="showList">
+                        <table class="w-full table-auto">
+                            <thead class="focus:outline-none h-16 border border-gray-100 rounded bg-gray-100">
+                                <tr>
+                                    <th class="">
+                                        <div class="flex items-center grow text-base font-medium pl-5">
+                                            <NewspaperIcon class="h-5 mr-1" />
+                                            Name
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="flex items-center text-base font-medium">
+                                            <TagIcon class="h-5 mr-1" />
+                                            Flag
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="flex items-center text-base font-medium">
+                                            <CalendarDaysIcon class="h-5  mr-1" />
+                                            Date
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="flex items-center text-base font-medium">
+                                            <MapPinIcon class="h-5  mr-1" />
+                                            Place
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="flex items-center text-base font-medium">
+                                            <PaperClipIcon class="h-5  mr-1" />
+                                            Attachement
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div class="flex  flex-row-reverse  text-base font-medium mr-4 items-center">
+                                            <EllipsisVerticalIcon class="h-5  mr-1" />
+                                            Actions
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr v-for="item in examItems" tabindex="0"
                                     class="focus:outline-none h-16 border border-gray-100 rounded">
                                     <td class="">
                                         <div class="flex items-center pl-5">
-                                            <p class="text-base font-medium leading-none text-gray-700 mr-2">{{
+                                            <p class="text-sm leading-none text-gray-700 mr-2">{{
                                                 item.exam
                                             }}
                                             </p>
@@ -52,14 +92,13 @@
                                     </td>
                                     <td class="">
                                         <div class="flex items-center">
-                                            <TagIcon class="h-5" />
+                                            
                                             <p class="text-sm leading-none text-gray-600 ml-2"> {{ item.importance }}
                                             </p>
                                         </div>
                                     </td>
                                     <td class="">
                                         <div class="flex items-center">
-                                            <CalendarDaysIcon class="h-5" />
                                             <button
                                                 class="py-3 px-3 text-sm focus:outline-none leading-none text-red-700 rounded">{{
                                                     new Date(item.date!).toLocaleString("el-GR", {
@@ -71,22 +110,28 @@
                                     </td>
                                     <td class="">
                                         <div class="flex items-center">
-                                            <MapPinIcon class="h-5" />
                                             <p class="text-sm leading-none text-gray-600 ml-2">{{ item.place }}</p>
                                         </div>
                                     </td>
                                     <td class="">
                                         <div class="flex items-center">
-                                            <PaperClipIcon class="h-5" />
-                                            <p class="text-sm leading-none text-gray-600 ml-2">
-                                                <a :href="'api/file/' + item.filePath">{{ item.fileName }}</a>
-                                            </p>
+                                            <span class="text-sm leading-none text-gray-600 ml-2">
+                                                <a :href="'api/file/' + item.filePath" target="_blank">{{
+                                                    item.fileName
+                                                }}</a>
+                                            </span>
                                         </div>
                                     </td>
                                     <td class="">
-                                        <div>
-                                            <button class="h-full w-full py-2 px-4 "
-                                                @click="showModalExam(item.id, item.place, item.exam, item.importance, item.fileName, item.date)">View</button>
+                                        <div class="flex flex-row-reverse ">
+                                            <button class="h-full mr-8"
+                                                @click="showModalExam(item.id, item.place, item.exam, item.importance, item.fileName, item.date)">
+                                                <ArrowsPointingOutIcon class="h-5" />
+                                            </button>
+                                            <button class="h-full mr-4"
+                                                @click="showModalExam(item.id, item.place, item.exam, item.importance, item.fileName, item.date)">
+                                                <TrashIcon class="h-5" />
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -107,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import { TagIcon, PaperClipIcon, MapPinIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline'
+import { NewspaperIcon, EllipsisVerticalIcon, ArrowsPointingOutIcon, TrashIcon, TagIcon, PaperClipIcon, MapPinIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline'
 
 interface UserExam {
     id: string;
@@ -129,10 +174,17 @@ useHead({
 
 const modalExam = ref()
 
+const showList = ref(false)
+
 const { data: examItems, pending, refresh, error } = await useFetch<UserExam[]>('/api/history', {
     method: 'GET',
     server: false
 })
+
+watch(examItems, (value) => {
+    showList.value = value != null && value[0] != undefined
+})
+
 
 const showModalExam = (examId: string | undefined, examPlace: string | undefined, examName: string | undefined, examImportance: string | undefined, examFileName: string | undefined, examDate: string | undefined) => {
 

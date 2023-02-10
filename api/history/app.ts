@@ -77,21 +77,16 @@ class App {
                 const historyExams = await UserHistory.findAll(
                     {
                         where: {userId: {[Op.eq]: test}},
+                        order: [
+                            ["date", "DESC"]
+                        ],
                         raw: true
                     }
                 );
 
-                
-                const exams = []
-
-                historyExams.every(exam => {
-                    exams.push({...exam})
-                    return exam
-                })
-
                 return res
                     .status(200)
-                    .json(exams);
+                    .json(historyExams);
             } catch (e) {
                 console.log(e)
                 return res.status(500).json({})
