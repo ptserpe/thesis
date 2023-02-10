@@ -76,9 +76,6 @@ export default defineEventHandler(async (event) => {
                         let existingExam = await $fetch<UserExam>(process.env.HISTORY! + `${fields.id}`, {
                             method: 'GET'
                         })
-                        console.log(process.env.HISTORY! + `${fields.id}`)
-                        console.log(fields)
-                        console.log(existingExam)
                                                 
                         if ((fields.fileName == undefined || fields.fileName == '') && existingExam.fileName != undefined && existingExam.fileName != '') {
 

@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         const decodeParam = decodeURI(event.context.params.name)
         const objectName = Buffer.from(decodeParam).toString('base64')
         const bucketName = session.user!.id
-        console.log(event.context.params.name, objectName)
+        
         const stat = await minioClient.statObject(bucketName, objectName)
         
 
