@@ -27,7 +27,8 @@ export default defineNuxtConfig({
         transpile: [
             "@heroicons/vue",
             '@types/minio',
-            'minio'
+            'minio',
+            'mime'
         ]
     },
     runtimeConfig: {

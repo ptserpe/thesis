@@ -40,17 +40,21 @@
                     <div class="overflow-x-auto">
                         <table class="w-full whitespace-nowrap">
                             <tbody>
-                                <tr v-for="item in examItems"  tabindex="0" class="focus:outline-none h-16 border border-gray-100 rounded">
+                                <tr v-for="item in examItems" tabindex="0"
+                                    class="focus:outline-none h-16 border border-gray-100 rounded">
                                     <td class="">
                                         <div class="flex items-center pl-5">
-                                            <p class="text-base font-medium leading-none text-gray-700 mr-2">{{ item.exam }}
+                                            <p class="text-base font-medium leading-none text-gray-700 mr-2">{{
+                                                item.exam
+                                            }}
                                             </p>
                                         </div>
                                     </td>
                                     <td class="">
                                         <div class="flex items-center">
                                             <TagIcon class="h-5" />
-                                            <p class="text-sm leading-none text-gray-600 ml-2"> {{ item.importance }}</p>
+                                            <p class="text-sm leading-none text-gray-600 ml-2"> {{ item.importance }}
+                                            </p>
                                         </div>
                                     </td>
                                     <td class="">
@@ -74,12 +78,15 @@
                                     <td class="">
                                         <div class="flex items-center">
                                             <PaperClipIcon class="h-5" />
-                                            <p class="text-sm leading-none text-gray-600 ml-2">{{ item.fileName }}</p>
+                                            <p class="text-sm leading-none text-gray-600 ml-2">
+                                                <a :href="'api/file/' + item.filePath">{{ item.fileName }}</a>
+                                            </p>
                                         </div>
                                     </td>
                                     <td class="">
                                         <div>
-                                            <button class="h-full w-full py-2 px-4 " @click="showModalExam(item.id, item.place, item.exam, item.importance, item.fileName, item.date)">View</button>
+                                            <button class="h-full w-full py-2 px-4 "
+                                                @click="showModalExam(item.id, item.place, item.exam, item.importance, item.fileName, item.date)">View</button>
                                         </div>
                                     </td>
                                 </tr>
