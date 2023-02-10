@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
                         await minioClient.makeBucket(session.user.id, '')
                     }
 
-                    minioClient.putObject(session.user.id, examFile.originalFilename, fileStream, examFile.size)
+                    minioClient.putObject(session.user.id, Buffer.from(examFile.originalFilename).toString('base64'), fileStream, examFile.size)
 
                     filePath = examFile.originalFilename
                 } catch (e) {

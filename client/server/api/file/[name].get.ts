@@ -18,19 +18,18 @@ export default defineEventHandler(async (event) => {
         return { status: 'unauthenticated!' }
     }
 
-    // console.log(session)
-    // console.log(event.context.params.name)
-
     try {
-
-        const objectName = event.context.params.name
+        const decodeParam = decodeURI(event.context.params.name)
+        const objectName = Buffer.from(decodeParam).toString('base64')
         const bucketName = session.user!.id
+        console.log(event.context.params.name, objectName)
         const stat = await minioClient.statObject(bucketName, objectName)
         
+
         const mimetype = mime.getType(objectName);
         event.node.res.writeHead(200, {
             "Content-Type": mimetype,
-            "Content-Disposition" : `attachment; filename=${objectName}`,
+            "Content-Disposition" : `attachment; filename=${decodeParam}`,
             "Content-length": stat.size,
         });
 
