@@ -3,11 +3,11 @@ import { Client } from 'minio';
 import mime from 'mime';
 
 var minioClient = new Client({
-    endPoint: 'localhost',
-    port: 9000,
+    endPoint: process.env.MINIO_HOST!,
+    port: parseInt(process.env.MINIO_PORT!),
     useSSL: false,
-    accessKey: 'minioadmin',
-    secretKey: 'minioadmin'
+    accessKey: process.env.MINIO_ACCESS!,
+    secretKey: process.env.MINIO_SECRET!
 });
 
 
