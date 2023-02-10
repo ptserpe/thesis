@@ -104,7 +104,6 @@ const file = ref({
 const show = ref(false)
 const modalExam = toRef(props, 'modalExam')
 watch(modalExam, (value) => {
-    console.log(value)
     if (value == undefined) {
         show.value = false
         reset()

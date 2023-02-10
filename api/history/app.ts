@@ -31,7 +31,6 @@ class App {
             try {
 
                 let examId = req.query['id']
-                console.log(req.query);
                 
                 let payload;
 
@@ -46,7 +45,6 @@ class App {
                     }
                 }
 
-                console.log(payload)
                 await UserHistory.upsert({ ...payload });
                 return res
                     .status(200)
@@ -71,7 +69,6 @@ class App {
         this.express.get('/api/history', async (req, res) => {
             try {
                 let test = req.query['userId']
-                console.log(req.query);
                 
                 if (String(test) == "") {
                     return res.status(400).json({})
@@ -88,7 +85,6 @@ class App {
                 const exams = []
 
                 historyExams.every(exam => {
-                    console.log(exam)
                     exams.push({...exam})
                     return exam
                 })
