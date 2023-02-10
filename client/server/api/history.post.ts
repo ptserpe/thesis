@@ -65,14 +65,11 @@ export default defineEventHandler(async (event) => {
                     method: 'POST',
                     body: historyExamApiBody
                 })
-
-                return { status: 'success' }
+                resolve({ status: 'success' })
             } catch (e) {
                 reject(e);
             }
         });
     });
-
-
     return data;
 })

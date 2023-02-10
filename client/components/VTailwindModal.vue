@@ -1,9 +1,9 @@
 <template>
     <vue-final-modal v-slot="{ params, close }" v-bind="$attrs" classes="flex justify-center items-center" :click-to-close="false"
         content-class="relative flex flex-col max-h-full mx-4 p-4 border dark:border-gray-800 rounded bg-white dark:bg-gray-900">
-        <span class="mr-8 text-2xl font-bold">
+        <h1 class="mr-8 font-bold">
             <slot name="title"></slot>
-        </span>
+        </h1>
         <div class="flex-grow overflow-y-auto">
             <slot :params="params"></slot>
         </div>

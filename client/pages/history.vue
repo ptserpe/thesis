@@ -1,9 +1,6 @@
 <template>
     <div>
-        <v-tailwind-modal v-model="show" @confirm="confirm" @cancel="cancel" >
-            <template v-slot:title>New Exam</template>
-            <NewExam/>
-        </v-tailwind-modal>
+        <NewExam :modalExam="modalExam" @done="done" />
     </div>
     <div class="bg-gray-800 h-full">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -35,7 +32,7 @@
                                 </div>
                             </a> -->
                         </div>
-                        <button @click="show = true"
+                        <button @click="showModalExam(undefined, undefined, undefined, undefined, undefined)"
                             class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded mb-4">
                             <p class="text-sm font-medium leading-none text-white">New Exam</p>
                         </button>
@@ -43,15 +40,57 @@
                     <div class="overflow-x-auto">
                         <table class="w-full whitespace-nowrap">
                             <tbody>
-                                <Exam v-for="item in examItems" :exam="item.exam" :filename="item.fileName"
-                                    :place="item.place" :important="item.importance" :datetime="item.creationDate" />
+                                <tr v-for="item in examItems"  tabindex="0" class="focus:outline-none h-16 border border-gray-100 rounded">
+                                    <td class="">
+                                        <div class="flex items-center pl-5">
+                                            <p class="text-base font-medium leading-none text-gray-700 mr-2">{{ item.exam }}
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="flex items-center">
+                                            <TagIcon class="h-5" />
+                                            <p class="text-sm leading-none text-gray-600 ml-2"> {{ item.importance }}</p>
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="flex items-center">
+                                            <CalendarDaysIcon class="h-5" />
+                                            <button
+                                                class="py-3 px-3 text-sm focus:outline-none leading-none text-red-700 rounded">{{
+                                                    new Date(item.creationDate).toLocaleString("el-GR", {
+                                                        year: 'numeric', month:
+                                                            'numeric', day: 'numeric'
+                                                    })
+                                                }}</button>
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="flex items-center">
+                                            <MapPinIcon class="h-5" />
+                                            <p class="text-sm leading-none text-gray-600 ml-2">{{ item.place }}</p>
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div class="flex items-center">
+                                            <PaperClipIcon class="h-5" />
+                                            <p class="text-sm leading-none text-gray-600 ml-2">{{ item.fileName }}</p>
+                                        </div>
+                                    </td>
+                                    <td class="">
+                                        <div>
+                                            <button class="h-full w-full py-2 px-4 " @click="showModalExam(item.place, item.exam, item.importance, item.fileName, item.creationDate)">View</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <Exam  />
                                 <tr class="h-3"></tr>
-                                <td class="overflow-y-hidden">
+                                <!-- <td class="overflow-y-hidden">
                                     <div class="flex items-center pl-5"
                                         v-if="examItems == null || examItems.length == 0">
                                         <p class="text-sm leading-none text-gray-600 ml-2">No exams</p>
                                     </div>
-                                </td>
+                                </td> -->
                             </tbody>
                         </table>
                     </div>
@@ -62,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { MinusIcon } from '@heroicons/vue/24/outline';
+import { TagIcon, PaperClipIcon, MapPinIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline'
 
 interface UserExam {
     id: string;
@@ -81,18 +120,31 @@ useHead({
     }
 })
 
-const { pending, data: examItems } = await useFetch<UserExam[]>('/api/history', {
+const modalExam = ref()
+
+const { data: examItems, pending, refresh, error } = await useFetch<UserExam[]>('/api/history', {
     method: 'GET',
     server: false
 })
+watch(examItems, (value) => {
+    console.log(value)
+})
+const showModalExam = (examPlace: string | undefined, examName: string | undefined, examImportance: string | undefined, examFileName: string | undefined, examDate: string | undefined) => {
 
-const show = ref(true)
-
-const confirm = () => { 
-    show.value = false 
+    modalExam.value = {
+        place: examPlace,
+        name: examName,
+        date: examDate,
+        importance: examImportance,
+        fileName: examFileName,
+    }
 }
-const cancel = () => { 
-    show.value = false 
+
+const done = async (update: boolean) => {
+    if (update) {
+        refresh()
+    }
+    modalExam.value = undefined
 }
 
 

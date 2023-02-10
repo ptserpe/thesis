@@ -15,7 +15,7 @@
             <div class="flex items-center">
                 <CalendarDaysIcon class="h-5" />
                 <button class="py-3 px-3 text-sm focus:outline-none leading-none text-red-700 rounded">{{
-                    DateTime
+                    new Date(DateTime).toLocaleString("el-GR",{ year: 'numeric', month: 'numeric', day: 'numeric' })
                 }}</button>
             </div>
         </td>
@@ -33,10 +33,7 @@
         </td>
         <td class="">
             <div>
-                <v-tailwind-modal v-model="show" @confirm="confirm" @cancel="cancel">
-                    <template v-slot:title>{{Exam}}</template>
-                    <p>Oxi allo MinIO</p>
-                </v-tailwind-modal>
+                <NewExam :show="show" @done="done" :datetime="DateTime" :exam="Exam" :important="Important" :place="Place" />
 
                 <button class="h-full w-full py-2 px-4 "  @click="show = true">View</button>
             </div>
@@ -58,7 +55,11 @@ const FileName = toRef(props, 'filename')
 
 const show = ref(false)
 
-const confirm = () => { show.value = false }
-const cancel = () => { show.value = false }
+const emit = defineEmits(['done'])
+
+const done = async (update: boolean) => {
+    emit('done', update)
+}
+
 
 </script>
