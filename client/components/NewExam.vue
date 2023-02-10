@@ -43,9 +43,17 @@
                         <label for="last-name" class="block text-sm font-medium text-gray-700">File Attachment</label>
                         <div class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
                             v-if="file.name.length > 0">
-                            <div>
-                                <span>{{ file.name }}.{{ file.fileExtention }}</span>
-                                <button class="ml-2" type="button" @click="remove()" title="Remove file">remove</button>
+                            <div class="flex">
+                                <span v-if="file.fileHandle != null">{{ file.name }}.{{ file.fileExtention }}</span>
+                                <a :href="'api/file/' + file.name" target="_blank"
+                                    v-if="file.fileHandle == null && file.name != ''">{{
+                                        file.name
+                                    }}</a>
+                                <div class="flex flex-row-reverse ">
+                                    <button class="h-full ml-4" type="button" @click="remove()" title="Remove file">
+                                        <TrashIcon class="h-5" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="mt-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
@@ -81,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { TagIcon, PaperClipIcon, MapPinIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon } from '@heroicons/vue/24/outline'
 import { VueFinalModal } from "vue-final-modal";
 
 const props = defineProps(['modalExam'])
@@ -145,6 +153,7 @@ const confirm = async () => {
 
     const formData = new FormData()
     formData.append('file', file.value.fileHandle)
+    formData.append('fileName', file.value.name)
     formData.append('exam', examName.value)
     formData.append('place', examPlace.value)
     formData.append('date', examDate.value)

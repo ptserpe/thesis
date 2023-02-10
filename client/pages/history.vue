@@ -92,7 +92,6 @@
                                     </td>
                                     <td class="">
                                         <div class="flex items-center">
-                                            
                                             <p class="text-sm leading-none text-gray-600 ml-2"> {{ item.importance }}
                                             </p>
                                         </div>
@@ -129,7 +128,7 @@
                                                 <ArrowsPointingOutIcon class="h-5" />
                                             </button>
                                             <button class="h-full mr-4"
-                                                @click="showModalExam(item.id, item.place, item.exam, item.importance, item.fileName, item.date)">
+                                                @click="deleteExam(item.id)">
                                                 <TrashIcon class="h-5" />
                                             </button>
                                         </div>
@@ -185,6 +184,15 @@ watch(examItems, (value) => {
     showList.value = value != null && value[0] != undefined
 })
 
+const deleteExam = async (examId: string) => {
+    await $fetch('/api/history', {
+        method: 'DELETE',
+        body: {
+            id: examId
+        }
+    })
+    refresh()
+}
 
 const showModalExam = (examId: string | undefined, examPlace: string | undefined, examName: string | undefined, examImportance: string | undefined, examFileName: string | undefined, examDate: string | undefined) => {
 

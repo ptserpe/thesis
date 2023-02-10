@@ -66,6 +66,19 @@ class App {
             }
         });
 
+        this.express.delete('/api/history/:id', async (req, res) => {
+            try {
+                var history = await UserHistory.destroy({
+                    where: {id: req.params.id}
+                });
+                return res
+                    .status(200)
+                    .json({});
+            } catch (e) {
+                return res.status(500).json({})
+            }
+        });
+
         this.express.get('/api/history', async (req, res) => {
             try {
                 let test = req.query['userId']
