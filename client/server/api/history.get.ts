@@ -25,8 +25,6 @@ export default defineEventHandler(async (event) => {
                 userId: session.user?.id
             },
         })
-
-        console.log(res)
         
         return { ...res }
     } catch (e) {

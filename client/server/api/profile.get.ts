@@ -26,8 +26,6 @@ export default defineEventHandler(async (event) => {
         var res = await $fetch<UserProfile>(process.env.PROFILE + session.user?.id, {
             method: 'GET',
         })
-
-        console.log(res)
         
         return { ...res }
     } catch (e) {

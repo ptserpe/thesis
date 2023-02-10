@@ -8,8 +8,6 @@ export default defineEventHandler(async (event) => {
 
     const reqbody = await readBody(event)
 
-    // console.log(reqbody)
-
     const apibody = {
         id: session.user.id,
         firstName: reqbody.firstName,
@@ -23,9 +21,7 @@ export default defineEventHandler(async (event) => {
         phone: reqbody.phone,
         nationality: reqbody.nationality
     }
-
-    console.log(apibody)
-
+    
     try {
         await $fetch(process.env.PROFILE + session.user?.id, {
             method: 'POST',

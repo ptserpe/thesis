@@ -25,7 +25,6 @@ export default defineEventHandler(async (event) => {
             const examFile = files.file;
             var filePath = ''
             if (examFile != null) {
-                console.log(examFile)
                 var fileStream = fs.createReadStream(examFile.filepath);
 
                 try {

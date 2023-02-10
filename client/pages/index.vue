@@ -33,7 +33,6 @@ const sleep = (ms: any) => new Promise(r => setTimeout(r, ms));
 
 
 async function postProfile(data: any) {
-    console.log(data)
 
     refreshing.value = true
 

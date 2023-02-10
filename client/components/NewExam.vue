@@ -41,12 +41,6 @@
                         <span>{{ file.name }}.{{ file.fileExtention }}</span>
                         <button class="ml-2" type="button" @click="remove()" title="Remove file">remove</button>
                     </div>
-                    <!-- <ul v-cloak>
-                            <li class="text-sm p-1" v-for="fl in filelist">
-                                {{ fl.name }}.{{ fl.fileExtention }}
-                               
-                            </li>
-                        </ul> -->
                 </div>
                 <div class="mt-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
                     @dragover="dragover" @dragleave="dragleave" @drop="drop">
@@ -191,4 +185,5 @@ const drop = (e: any) => {
     e.currentTarget.classList.add('bg-white');
     e.currentTarget.classList.remove('bg-green-300');
 }
+
 </script>
