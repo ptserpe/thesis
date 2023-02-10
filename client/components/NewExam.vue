@@ -115,7 +115,7 @@ watch(modalExam, (value) => {
     if (value.date == undefined) {
         examDate.value = new Date().toLocaleString("el-GR", { year: 'numeric', month: 'numeric', day: 'numeric' })
     } else {
-        examDate.value = value.date
+        examDate.value = new Date(value.date).toLocaleString("el-GR", { year: 'numeric', month: 'numeric', day: 'numeric' })
     }
 
     examName.value = value.name

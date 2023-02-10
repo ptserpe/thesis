@@ -83,7 +83,6 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <Exam  />
                                 <tr class="h-3"></tr>
                                 <!-- <td class="overflow-y-hidden">
                                     <div class="flex items-center pl-5"
@@ -126,9 +125,7 @@ const { data: examItems, pending, refresh, error } = await useFetch<UserExam[]>(
     method: 'GET',
     server: false
 })
-watch(examItems, (value) => {
-    console.log(value)
-})
+
 const showModalExam = (examPlace: string | undefined, examName: string | undefined, examImportance: string | undefined, examFileName: string | undefined, examDate: string | undefined) => {
 
     modalExam.value = {
