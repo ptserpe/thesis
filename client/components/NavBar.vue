@@ -5,8 +5,8 @@ import { Bars3Icon, BellIcon, UserIcon, XMarkIcon } from '@heroicons/vue/24/outl
 const route = useRoute()
 
 const navigation = [
-    { name: 'History', href: '/history', current: route.path == "/history" },
-    { name: 'Profile', href: '/', current: route.path == "/" },
+    { name: 'History', href: '/', current: route.path == "/" },
+    { name: 'Profile', href: '/profile', current: route.path == "/profile" },
 ]
 
 
@@ -34,7 +34,7 @@ const { signOut } = useSession()
                         <img class="hidden h-8 w-auto lg:block"
                             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
                     </div> -->
-                    <div class="hidden sm:ml-6 sm:block">
+                    <div class="hidden sm:block">
                         <div class="flex space-x-4">
                             <a v-for="item in navigation" :key="item.name" :href="item.href"
                                 :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'px-3 py-2 rounded-md text-sm font-medium']"
