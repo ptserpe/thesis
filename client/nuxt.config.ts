@@ -28,7 +28,8 @@ export default defineNuxtConfig({
             "@heroicons/vue",
             '@types/minio',
             'minio',
-            'mime'
+            'mime',
+            'moment'
         ]
     },
     runtimeConfig: {

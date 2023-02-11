@@ -17,6 +17,7 @@
     "@types/minio": "^7.0.15",
     "formidable": "^2.1.1",
     "mime": "^3.0.0",
+    "moment": "^2.29.4",
     "nuxt": "3.0.0",
     "vue-final-modal": "3"
   },

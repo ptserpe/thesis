@@ -2,7 +2,7 @@
     <vue-final-modal v-model="show" classes="flex justify-center items-center" :click-to-close="false"
         content-class="relative flex flex-col max-h-full mx-4 p-4 border dark:border-gray-800 rounded bg-white dark:bg-gray-900">
         <h1 class="mr-8 font-bold">
-            New Exam
+            {{ examAction }}
         </h1>
         <div class="flex-grow overflow-y-auto">
             <div class="overflow-hidden">
@@ -76,7 +76,8 @@
             <div
                 class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mx-4">
 
-                <button class="h-full w-full py-2 px-6" @click="confirm">Save</button>
+                <button :disabled="saveDisabled" class="h-full w-full py-2 px-6 disabled:opacity-20"
+                    @click="confirm">Save</button>
             </div>
 
             <div
@@ -91,16 +92,60 @@
 <script setup lang="ts">
 import { TrashIcon } from '@heroicons/vue/24/outline'
 import { VueFinalModal } from "vue-final-modal";
+import moment from 'moment';
 
 const props = defineProps(['modalExam'])
 
 const fileInputKey = ref(0)
 
+const convertDate = (d: string) => {
+    let m = moment(d, "DD/MM/YYYY")
+    if (!m.isValid()) {
+        console.log(d)
+        m = moment(d)
+        if (!m.isValid()) {
+            return undefined
+        }
+        return m.toISOString()
+    }
+
+    return m.toISOString()
+}
+
+const examAction = ref('')
+const saveDisabled = ref(true)
+const toggleSaveButton = () => {
+    const nonEmptyFields = examDate.value != '' && examDate.value != undefined &&
+        examImportance.value != '' && examImportance.value != undefined &&
+        examName.value != '' && examName.value != undefined
+
+    const noChanges = convertDate(examDate.value) == convertDate(props.modalExam?.date) && 
+        examPlace.value == props.modalExam?.place &&
+        examImportance.value == props.modalExam?.importance &&
+        examName.value == props.modalExam?.name &&
+        file.value.name == props.modalExam?.fileName
+
+    saveDisabled.value = !nonEmptyFields || noChanges
+}
 const examId = ref(undefined)
 const examName = ref('')
+watch(examName, (v) => {
+    toggleSaveButton()
+})
 const examDate = ref('')
+watch(examDate, (v) => {
+    toggleSaveButton()
+})
 const examImportance = ref('')
+watch(examImportance, (v) => {
+    toggleSaveButton()
+})
+
 const examPlace = ref('')
+watch(examPlace, (v) => {
+    toggleSaveButton()
+})
+
 const file = ref({
     fileHandle: <any>null,
     name: "",
@@ -109,6 +154,10 @@ const file = ref({
     fileExtention: "",
     url: <any>"",
 })
+watch(file, (v) => {
+    toggleSaveButton()
+})
+
 const show = ref(false)
 const modalExam = toRef(props, 'modalExam')
 watch(modalExam, (value) => {
@@ -127,12 +176,15 @@ watch(modalExam, (value) => {
 
     if (value.id != undefined) {
         examId.value = value.id
+        examAction.value = 'Edit Exam'
+        examImportance.value = value.importance
     } else {
         examId.value = undefined
+        examAction.value = 'New Exam'
+        examImportance.value = 'Normal'
     }
 
     examName.value = value.name
-    examImportance.value = value.importance
     examPlace.value = value.place
 
     if (value.fileName != undefined) {
@@ -156,7 +208,7 @@ const confirm = async () => {
     formData.append('fileName', file.value.name)
     formData.append('exam', examName.value)
     formData.append('place', examPlace.value)
-    formData.append('date', examDate.value)
+    formData.append('date', convertDate(examDate.value))
     formData.append('importance', examImportance.value)
     if (examId.value != undefined) {
         formData.append('id', examId.value)

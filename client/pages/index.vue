@@ -1,6 +1,6 @@
 <template>
     <div>
-        <NewExam :modalExam="modalExam" @done="done" />
+        <ExamModal :modalExam="modalExam" @done="done" />
     </div>
     <div class="bg-gray-800 h-full">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -32,14 +32,16 @@
                                 </div>
                             </a> -->
                         </div>
-                        <button @click="showModalExam(undefined, undefined, undefined, undefined, undefined, undefined)"
+                        <button @click="showModalExam(undefined, '', undefined, undefined, undefined, undefined)"
                             class="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-700 hover:bg-indigo-600 focus:outline-none rounded mb-4">
                             <p class="text-sm font-medium leading-none text-white">New Exam</p>
                         </button>
                     </div>
-                    <div class="flex items-center pl-5 justify-items-center place-content-center mt-10 mb-5" v-if="!showList">
+                    <div class="flex items-center pl-5 justify-items-center place-content-center mt-10 mb-5"
+                        v-if="!showList">
                         <ExclamationCircleIcon class="h-5 mr-1" />
-                        <p class="text-sm leading-none text-gray-600 ml-2">No exams found. Click "New Exam" to add one.</p>
+                        <p class="text-sm leading-none text-gray-600 ml-2">No exams found. Click "New Exam" to add one.
+                        </p>
                     </div>
                     <div class="overflow-x-auto" v-if="showList">
                         <table class="w-full table-auto">
@@ -89,14 +91,17 @@
                                     <td class="">
                                         <div class="flex items-center pl-5">
                                             <p class="text-sm leading-none text-gray-700 mr-2">{{
-                                                item.exam
+                                                item.exam != undefined && item.exam != '' ? item.exam : '-'
                                             }}
                                             </p>
                                         </div>
                                     </td>
                                     <td class="">
                                         <div class="flex items-center">
-                                            <p class="text-sm leading-none text-gray-600 ml-2"> {{ item.importance }}
+                                            <p class="text-sm leading-none text-gray-600 ml-2"> {{
+                                                item.importance != undefined && item.importance != '' ? item.importance
+                                                    : '-'
+                                            }}
                                             </p>
                                         </div>
                                     </td>
@@ -113,14 +118,20 @@
                                     </td>
                                     <td class="">
                                         <div class="flex items-center">
-                                            <p class="text-sm leading-none text-gray-600 ml-2">{{ item.place }}</p>
+                                            <p class="text-sm leading-none text-gray-600 ml-2">{{
+                                            
+                                                item.place != undefined && item.place != '' ? item.place
+                                                    : '-'
+                                            
+                                            }}</p>
                                         </div>
                                     </td>
                                     <td class="">
                                         <div class="flex items-center">
                                             <span class="text-sm leading-none text-gray-600 ml-2">
                                                 <a :href="'api/file/' + item.filePath" target="_blank">{{
-                                                    item.fileName
+                                                    item.fileName != undefined && item.fileName != '' ? item.fileName
+                                                        : '-'
                                                 }}</a>
                                             </span>
                                         </div>
@@ -129,7 +140,7 @@
                                         <div class="flex flex-row-reverse ">
                                             <button class="h-full mr-8"
                                                 @click="showModalExam(item.id, item.place, item.exam, item.importance, item.fileName, item.date)">
-                                                <ArrowsPointingOutIcon class="h-5" />
+                                                <PencilSquareIcon class="h-5" />
                                             </button>
                                             <button class="h-full mr-4" @click="deleteExam(item.id)">
                                                 <TrashIcon class="h-5" />
@@ -148,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { ExclamationCircleIcon, NewspaperIcon, EllipsisVerticalIcon, ArrowsPointingOutIcon, TrashIcon, TagIcon, PaperClipIcon, MapPinIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline'
+import { ExclamationCircleIcon, NewspaperIcon, EllipsisVerticalIcon, PencilSquareIcon, TrashIcon, TagIcon, PaperClipIcon, MapPinIcon, CalendarDaysIcon } from '@heroicons/vue/24/outline'
 
 interface UserExam {
     id: string;
